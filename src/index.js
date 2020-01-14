@@ -2,31 +2,20 @@ import React from "react";
 import ReactDOM from "react-dom";
 import SeasonDisplay from "./SeasonDisplay";
 import Loader from "./Loader";
-class App extends React.Component {
-  state = { lat: null, errorMessage: "" };
+import useLocation from "./useLocation";
 
-  componentDidMount() {
-    window.navigator.geolocation.getCurrentPosition(
-      position => this.setState({ lat: position.coords.latitude }),
-      err => this.setState({ errorMessage: err.message })
-    );
+const App = () => {
+  let content;
+  const [lat, errorMessage] = useLocation();
+
+  if (errorMessage) {
+    content = <div>Error: {errorMessage} </div>;
+  } else if (lat) {
+    content = <SeasonDisplay lat={lat} />;
+  } else {
+    content = <Loader message="Please accept location request" />;
   }
-
-  renderContent() {
-    if (this.state.errorMessage && !this.state.lat) {
-      return <div>Error: {this.state.errorMessage} </div>;
-    }
-
-    if (!this.state.errorMessage && this.state.lat) {
-      return <SeasonDisplay lat={this.state.lat} />;
-    }
-
-    return <Loader message="Please accept location request" />;
-  }
-
-  render() {
-    return <div className="border red">{this.renderContent()}</div>;
-  }
-}
+  return <div className="border red">{content}</div>;
+};
 
 ReactDOM.render(<App />, document.querySelector("#root"));
