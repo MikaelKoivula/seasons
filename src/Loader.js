@@ -9,7 +9,7 @@ const Loader = props => {
 };
 
 Loader.defaultProps = {
-  message: "Loading..."
+  message: "Loading!"
 };
 
 export default Loader;
